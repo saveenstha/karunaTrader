@@ -1,0 +1,56 @@
+{% extends 'kTradersApp/base.html'%}
+{% load static %}
+
+{% block title %}
+    <title>Karuna Traders | Update Buyer</title>
+{% endblock %}
+
+{% block content %}
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+    {% if user.id == buyer.created_by.id %}
+
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1> Delete Buyer Info ?</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">Delete Buyer</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content-wrapper -->
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="form-group">
+                    <!-- form start -->
+                    <div class="form-group">
+                <div class="order-md-last d-flex">
+                    <form method="POST" class="bg-light p-4 p-md-5 ">
+                        {% csrf_token %}
+                        <strong class="text-danger"> Are you sure you want to delete {{ buyer }} and all of it's contents ?</strong><br>
+                        <button type="submit" value="Confirm" class="btn btn-primary py-3 px-5"> Delete  </button>
+                        <button type="submit" name="cancel" value="Cancel" class="btn btn-secondary py-3 px-5"> Cancel </button>
+                    </form>
+                </div>
+            </div>
+
+                </div>
+
+            </div>
+        </section>
+    {% else %}
+    <p>Page not found</p>
+    {% endif %}
+    </div>
+
+{% endblock %}
