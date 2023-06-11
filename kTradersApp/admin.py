@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import Buyer, Transaction, ParticularsDetail
+from .models import Buyer, OwnerDetails
 
 # Register your models here.
 admin.site.register(Buyer)
-admin.site.register(Transaction)
-admin.site.register(ParticularsDetail)
+admin.site.register(OwnerDetails)
+# admin.site.register(Balance)

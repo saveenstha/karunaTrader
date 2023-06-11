@@ -1,0 +1,110 @@
+{% extends 'kTradersApp/base.html'%}
+{% load static %}
+
+{% block title %}
+    <title>Karuna Traders | Update Owner Information</title>
+{% endblock %}
+
+{% block content %}
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+    {% if user.is_authenticated %}
+
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1> Update Owner Info</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">Add Owner Info</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content-wrapper -->
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="form-group">
+                    <!-- form start -->
+                    <form method="POST" enctype="multipart/form-data" >
+                        {% csrf_token %}
+                        <div class="row">
+                            <!-- left column -->
+
+                            <!-- right column -->
+                            <div class="col-md-6">
+                                <!-- general form elements disabled -->
+                                <div class="card card-warning">
+                                  <div class="card-header">
+                                    <h3 class="card-title">Owner Details</h3>
+                                  </div>
+                                  <!-- /.card-header -->
+                                  <div class="card-body">
+                                      <div class="row">
+                                        <div class="col-sm-6">
+                                          <!-- text input -->
+                                          <div class="form-group">
+                                            <label>First Name</label>
+                                            {{ form.first_name }}
+                                          </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                          <div class="form-group">
+                                            <label>Last Name</label>
+                                            {{ form.last_name }}
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                          <div class="col-sm-6">
+                                              <div class="form-group">
+                                                <label>Phone: {{ form.contact }}</label>
+                                              </div>
+                                          </div>
+                                          <div class="col-sm-6">
+                                              <div class="form-group">
+                                                <label>Mobile: {{ form.mobile }}</label>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                            <!--/.col (right) -->
+                        </div>
+                        <div class="row">
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                            <div class="card-footer">
+                                <button type="cancel" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+
+                <script>
+                    var created_by_Id = "{{ user.id }}"
+                    document.getElementById("created_by").value = created_by_Id
+                </script>
+            </div>
+        </section>
+    {% else %}
+        <div>
+            <p> you're not authorised to add view this page.</p>
+        </div>
+    {% endif %}
+    </div>
+
+{% endblock %}

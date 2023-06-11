@@ -1,0 +1,5 @@
+.env
+**__pycache__/
+venv/
+karuna_venv/
+db.sqlite3
