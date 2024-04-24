@@ -3,12 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.urls import path
 from . import models, views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from .views import (Dashboard, BuyerCreateView, BuyerListView, BuyerUpdateView, BuyerDeleteView,
-                    AllBuyersView, BuyerProfileDetailView, BuyerProfileUpdateView
-)
+from .views import *
+
 
 urlpatterns = [
-    path('', views.starter, name='starter'),
+    path('', LandingPageView.as_view(), name='landing_page'),
     path('index/', views.index, name='index'),
     path('index2/', views.index2, name='index2'),
     # path('Dashboard/', views.dashboard, name='dashboard'),

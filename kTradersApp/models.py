@@ -19,6 +19,7 @@ class Buyer(models.Model):
     def get_absolute_url(self):
         return reverse('buyer-list')
 
+
 class OwnerDetails(models.Model):
     pan_num = models.ForeignKey(Buyer, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=255, blank=True, null=True)

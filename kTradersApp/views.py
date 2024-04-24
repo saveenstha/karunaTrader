@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.forms.formsets import formset_factory
 from django.contrib.auth.decorators import login_required
-from django.views.generic import CreateView, UpdateView, ListView, DeleteView, DetailView
+from django.views.generic import CreateView, UpdateView, ListView, DeleteView, DetailView, TemplateView
 from .models import Buyer, OwnerDetails
 from transactions.models import Transactions
 from .forms import BuyerForm, EditBuyerForm, EditBuyerProfileForm
@@ -10,14 +10,14 @@ from django.urls import reverse_lazy
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import get_object_or_404
 
+
 # Create your views here.
 def home(request):
     return render('login')
 
 
-def starter(request):
-    return render(request, 'kTradersApp/starter.html')
-
+class LandingPageView(TemplateView):
+    template_name = 'kTradersApp/landing_page.html'
 
 def index(request):
     return render(request, 'kTradersApp/index.html')
@@ -92,6 +92,7 @@ class BuyerUpdateView(UpdateView):
     form_class = EditBuyerForm
     template_name = 'kTradersApp/buyer/update_buyer.html'
 
+
 class BuyerProfileUpdateView(UpdateView):
     model = OwnerDetails
     form_class = EditBuyerProfileForm
@@ -104,7 +105,6 @@ class BuyerProfileUpdateView(UpdateView):
 
     def get_queryset(self):
         return self.model.objects.filter(pan_num=self.kwargs['pk'])
-
 
 
 class BuyerDeleteView(DeleteView):
