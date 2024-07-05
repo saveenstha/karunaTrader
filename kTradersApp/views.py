@@ -70,15 +70,18 @@ class AllBuyersView(ListView):
 class BuyerListView(ListView):
     model = Buyer
     template_name = 'kTradersApp/buyer_list.html'
-
-    def get_context_data(self, *args, **kwargs):
-        context = super(BuyerListView, self).get_context_data(*args, **kwargs)
-        context['owner'] = OwnerDetails.objects.select_related().all().values()
-        print(context['owner'])
-        return context
+    context_object_name = 'buyers_with_owners'
+    # def get_context_data(self, *args, **kwargs):
+    #     context = super(BuyerListView, self).get_context_data(*args, **kwargs)
+    #     context['owner'] = OwnerDetails.objects.select_related().all().values()
+    #     print(context['owner'])
+    #     return context
 
     # def get_queryset(self):
         # return OwnerDetails.objects.
+
+    def get_queryset(self):
+        return Buyer.objects.prefetch_related('ownerdetails_set').all()
 
 
 class BuyerCreateView(CreateView):

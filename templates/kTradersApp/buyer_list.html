@@ -58,13 +58,10 @@
                                       </tr>
                                     </thead>
                                     <tbody>
-                                    object list = {{ object_list }} <br>
-                                    owner details ={{ owner }}
 
-                                    {% for buyer in object_list %}
-{#                                        {% for o in owner %}#}
-{#                                            {{ o.pan_num_id }}#}
-{#                                            {% endfor %}#}
+                                    {% for buyer in buyers_with_owners  %}
+                                        {% for owner in buyer.ownerdetails_set.all %}
+
                                         <tr>
 
                                             <td>
@@ -97,6 +94,7 @@
 
 
                                           </tr>
+                                        {% endfor %}
                                     {% endfor %}
                                     </tbody>
                                 </table>
