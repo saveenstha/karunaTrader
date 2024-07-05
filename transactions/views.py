@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 
-from .models import Transactions
+from .models import Transaction
 from kTradersApp.models import Buyer
-from .forms import TransactionForm
+# from .forms import TransactionForm
 from django.contrib import messages
 from django.views import generic
 from django.views.generic import CreateView, DeleteView
@@ -14,8 +14,8 @@ from django.contrib import messages
 # Create your views here.
 
 class AddTransactionView(CreateView):
-    model = Transactions
-    form_class = TransactionForm
+    model = Transaction
+    # form_class = TransactionForm
     template_name = 'transactions/add_transaction.html'
     # success_url = 'dashboard'
 
@@ -34,7 +34,7 @@ class AddTransactionView(CreateView):
 
 
 class DeleteTransactionViews(generic.DeleteView):
-    model = Transactions
+    model = Transaction
     template_name = "transactions/delete_transaction.html"
     success_url = reverse_lazy('dashboard')
 

@@ -5,13 +5,17 @@ from kTradersApp.models import Buyer
 
 
 # # Create your models here.
-class Transactions(models.Model):
-    txn_date = models.DateField(default=timezone.now, null=True)
-    pan_num = models.ForeignKey(Buyer, on_delete=models.PROTECT)
+class Transaction(models.Model):
+    TRANSACTION_TYPES = [
+        ('credit', 'Credit'),
+        ('debit', 'Debit'),
+    ]
+
     bill_number = models.IntegerField(unique=True)
-    credit_amount = models.IntegerField(null=True)
-    debit_amount = models.IntegerField(null=True)
-    balance_after_transaction = models.IntegerField(default=0)
+    buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE, related_name='transactions')
+    transaction_type = models.CharField(max_length=6, choices=TRANSACTION_TYPES)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    created_on = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return "bill-no : " + str(self.bill_number)

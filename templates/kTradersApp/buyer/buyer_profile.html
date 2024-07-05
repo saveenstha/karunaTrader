@@ -100,6 +100,7 @@
             </div>
             <!-- /.card -->
           </div>
+
           <!-- /.col -->
           <div class="col-md-9">
             <div class="card">
@@ -135,13 +136,18 @@
                                       </tr>
                                   </thead>
                                   <tbody>
-                                {% for transaction in buyers_txn %}
+                                {% for txn in buyers_txn %}
                                   <tr>
-                                    <td>{{ transaction.txn_date }}</td>
-                                    <td>{{ transaction.bill_number }}</td>
-                                    <td>{{ transaction.credit_amount}}</td>
-                                    <td>{{ transaction.debit_amount }}</td>
-                                    <td>{{ transaction.balance_after_transaction }}</td>
+                                    <td>{{ txn.created_on.date }}</td>
+                                    <td>{{ txn.bill_number }}</td>
+                                      {% if txn.transaction_type == 'credit' %}
+                                    <td> {{ txn.amount}}</td>
+                                    <td> </td>
+                                      {% else %}
+                                    <td> </td>
+                                    <td> {{ txn.amount }}</td>
+                                      {% endif %}
+                                    <td>{{ buyer.balance }}</td>
                                     <td></td>
                                   </tr>
                                 {% endfor %}

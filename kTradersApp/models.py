@@ -11,7 +11,7 @@ class Buyer(models.Model):
     pan_num = models.CharField(max_length=9, primary_key=True, validators=[RegexValidator(r'^\d{1,10}$')])
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     created_on = models.DateTimeField(default=timezone.now)
-    Balance = models.IntegerField(default=0)
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
         return self.company_name

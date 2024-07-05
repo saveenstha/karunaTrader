@@ -45,7 +45,7 @@ to get the desired effect
           <div class="col-lg">
             <div class="card">
               <div class="card-header border-0">
-                <h3 class="card-title">All Sales</h3>
+                <h3 class="card-title">All Transactions</h3>
                 <div class="card-tools">
                   <a href="#" class="btn btn-tool btn-sm">
                     <i class="fas fa-download"></i>
@@ -60,7 +60,7 @@ to get the desired effect
                   <thead>
                   <tr>
                     <th>Date</th>
-                    <th>Buyer PAN </th>
+                    <th>Client </th>
                     <th>Bill No. </th>
                     <th>Transport Vehicle </th>
                     <th>Driver Contact </th>
@@ -73,15 +73,20 @@ to get the desired effect
                   <tbody>
                 {% for txn in txn_list %}
                   <tr>
-                    <td> {{ txn.txn_date }} </td>
-                      <td> <a href="{% url 'buyer-profile' txn.pk %}">{{ txn.pan_num }}</a></td>
+                    <td> {{ txn.created_on.date }} </td>
+                      <td> <a href="{% url 'buyer-profile' txn.pk %}">{{ txn.buyer }}</a></td>
                     <td> {{ txn.bill_number }}</td>
                     <td> {{ txn.transport_vehicle }}</td>
                     <td> {{ txn.driver_contact }}</td>
                     <td> {{ txn.fare_per_package_rate }}</td>
                     <td> {{ txn.total_package }}</td>
-                    <td> {{ txn.credit_amount }}</td>
-                    <td> {{ txn.debit_amount }}</td>
+                      {% if txn.transaction_type == 'credit' %}
+                    <td> {{ txn.amount}}</td>
+                    <td> </td>
+                      {% else %}
+                    <td> </td>
+                    <td> {{ txn.amount }}</td>
+                      {% endif %}
                   </tr>
                 {% endfor %}
                   <div class="pagination">

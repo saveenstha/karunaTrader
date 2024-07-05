@@ -1,20 +1,20 @@
 from django import forms
-from transactions.models import Transactions #, ParticularsDetail
+from transactions.models import Transaction #, ParticularsDetail
 
 
-class TransactionForm(forms.ModelForm):
-    class Meta:
-        model = Transactions
-        fields = {'txn_date','bill_number', 'pan_num', 'credit_amount'}
-
-        widget = {
-            'txn_date': forms.DateInput(format=('%Y-%m-%d'),
-                                        attrs={'class': 'form-control dateinput form-control',
-                                               'placeholder': 'Select a date'}),
-            'bill_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Bill Number'}),
-            'pan_num': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter PAN Number'}),
-            'credit_amount': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Total Amount'}),
-        }
+# class TransactionForm(forms.ModelForm):
+#     class Meta:
+#         model = Transaction
+#         fields = {'txn_date','bill_number', 'pan_num', 'credit_amount'}
+#
+#         widget = {
+#             'txn_date': forms.DateInput(format=('%Y-%m-%d'),
+#                                         attrs={'class': 'form-control dateinput form-control',
+#                                                'placeholder': 'Select a date'}),
+#             'bill_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Bill Number'}),
+#             'pan_num': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter PAN Number'}),
+#             'credit_amount': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Total Amount'}),
+#         }
 
 
 # class ParticularsForm(forms.ModelForm):

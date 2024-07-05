@@ -4,7 +4,7 @@ from django.forms.formsets import formset_factory
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView, DetailView, TemplateView
 from .models import Buyer, OwnerDetails
-from transactions.models import Transactions
+from transactions.models import Transaction
 from .forms import BuyerForm, EditBuyerForm, EditBuyerProfileForm
 from django.urls import reverse_lazy
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -28,11 +28,12 @@ def index2(request):
 
 # @login_required
 class Dashboard(ListView):
-    model = Transactions
+    model = Transaction
     template_name = 'kTradersApp/dashboard.html'
     paginate_by = 2
+
     def get_context_data(self, *args, **kwargs):
-        txn_list = Transactions.objects.all().order_by('-bill_number')
+        txn_list = Transaction.objects.all().order_by('-bill_number')
         paginator = Paginator(txn_list, self.paginate_by)
 
         page_number = self.request.GET.get('page')
@@ -41,9 +42,6 @@ class Dashboard(ListView):
 
         context = {'txn_list': txn_list,'page_obj': page_obj}
         return context
-
-
-
 
 
 class BuyerProfileDetailView(DetailView):
@@ -56,9 +54,9 @@ class BuyerProfileDetailView(DetailView):
         context["buyer"] = company_data.values()[0]
         if OwnerDetails.objects.filter(pan_num=self.object.pk).exists():
             context["owner"] = OwnerDetails.objects.filter(pan_num=self.object.pk).values()[0]
-        context["buyers_txn"] = Transactions.objects.filter(pan_num=self.object.pk).order_by()
+        context["buyers_txn"] = Transaction.objects.filter(buyer=self.object.pk).order_by()
         # context["particulars"] = ParticularsDetail.objects.all()
-        print("Balance", context["buyer"]["Balance"])
+        # print("Balance", context["buyer"]["Balance"])
         return context
 
 
@@ -71,14 +69,6 @@ class BuyerListView(ListView):
     model = Buyer
     template_name = 'kTradersApp/buyer_list.html'
     context_object_name = 'buyers_with_owners'
-    # def get_context_data(self, *args, **kwargs):
-    #     context = super(BuyerListView, self).get_context_data(*args, **kwargs)
-    #     context['owner'] = OwnerDetails.objects.select_related().all().values()
-    #     print(context['owner'])
-    #     return context
-
-    # def get_queryset(self):
-        # return OwnerDetails.objects.
 
     def get_queryset(self):
         return Buyer.objects.prefetch_related('ownerdetails_set').all()
