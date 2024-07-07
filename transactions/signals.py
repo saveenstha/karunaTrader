@@ -1,6 +1,9 @@
+import logging
 from .models import Transactions
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
+
+logger = logging.getLogger(__name__)
 
 
 class TransactionSignalHandler:
@@ -28,6 +31,9 @@ class TransactionSignalHandler:
                 buyer.balance -= instance.amount
             buyer.save()
 
+        logger.info(f"Updated buyer balance to {buyer.balance} for transaction {instance}")
+
+
     @staticmethod
     @receiver(pre_delete, sender=Transaction)
     def update_buyer_balance_on_delete(sender, instance, **kwargs):
@@ -37,3 +43,5 @@ class TransactionSignalHandler:
         elif instance.transaction_type == 'debit':
             buyer.balance += instance.amount
         buyer.save()
+
+        logger.info(f"Updated buyer balance to {buyer.balance} after deleting transaction {instance}")

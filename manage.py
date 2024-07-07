@@ -12,6 +12,7 @@ def main():
     #     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'karunaTrader.settings.production')
     # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'karunaTrader.settings')
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'karunaTrader.settings.local_settings')
+    # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'karunaTrader.settings.production')
 
     try:
         from django.core.management import execute_from_command_line

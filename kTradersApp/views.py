@@ -56,7 +56,7 @@ class BuyerProfileDetailView(DetailView):
             context["owner"] = OwnerDetails.objects.filter(pan_num=self.object.pk).values()[0]
         context["buyers_txn"] = Transaction.objects.filter(buyer=self.object.pk).order_by()
         # context["particulars"] = ParticularsDetail.objects.all()
-        # print("Balance", context["buyer"]["Balance"])
+
         return context
 
 
