@@ -11,7 +11,7 @@ def main():
     # else:
     #     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'karunaTrader.settings.production')
     # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'karunaTrader.settings')
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'karunaTrader.settings.local_settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'karunaTrader.settings.dev')
     # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'karunaTrader.settings.production')
 
     try:
