@@ -1,0 +1,30 @@
+{% extends 'base.html'%}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Purchases</h2>
+  <a href="{% url 'purchase-add' %}" class="btn btn-success mb-3">Add Purchase</a>
+  <table class="table table-bordered">
+    <thead>
+      <tr><th>Farmer</th><th>Product</th><th>Qty (kg)</th><th>Rate</th><th>Date</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for p in purchases %}
+        <tr>
+          <td>{{ p.farmer.name }}</td>
+          <td>{{ p.product.name }}</td>
+          <td>{{ p.quantity_kg }}</td>
+          <td>Rs. {{ p.price_per_kg }}</td>
+          <td>{{ p.date }}</td>
+          <td>
+            <a href="{% url 'purchase-edit' p.pk %}" class="btn btn-primary btn-sm">Edit</a>
+            <a href="{% url 'purchase-delete' p.pk %}" class="btn btn-danger btn-sm">Delete</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="6">No purchases found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

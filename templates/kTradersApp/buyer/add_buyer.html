@@ -6,10 +6,8 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-    {% if user.is_authenticated %}
 
+    {% if user.is_authenticated %}
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <div class="container-fluid">
@@ -31,94 +29,100 @@
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
-                <div class="form-group">
-                    <!-- form start -->
-                    <form method="POST" enctype="multipart/form-data" >
-                        {% csrf_token %}
-                        <div class="row">
-                            <!-- left column -->
-                            <div class="col-md-6">
-                            <!-- general form elements -->
-                            <div class="card card-primary">
-                              <div class="card-header">
-                                <h3 class="card-title">Company Details</h3>
-                              </div>
-                              <!-- /.card-header -->
-                                <div class="card-body">
-                                  <div class="form-group">
-                                    <label>Name of Company</label>
-                                    {{ form.company_name }}
-                                  </div>
-                                  <div class="form-group">
-                                    <label>Pan_num</label>
-                                    {{ form.pan_num }}
-                                  </div>
-                                    <div class="form-group">
-                                        <label>Address</label>
+                <h2>Add {{ view.model.__name__ }}</h2>
+                  <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Save</button>
+                  </form>
+{#                <div class="form-group">#}
+{#                    <!-- form start -->#}
+{#                    <form method="POST" enctype="multipart/form-data" >#}
+{#                        {% csrf_token %}#}
+{#                        <div class="row">#}
+{#                            <!-- left column -->#}
+{#                            <div class="col-md-6">#}
+{#                            <!-- general form elements -->#}
+{#                            <div class="card card-primary">#}
+{#                              <div class="card-header">#}
+{#                                <h3 class="card-title">Company Details</h3>#}
+{#                              </div>#}
+{#                              <!-- /.card-header -->#}
+{#                                <div class="card-body">#}
+{#                                  <div class="form-group">#}
+{#                                    <label>Name of Company</label>#}
+{#                                    {{ form.company_name }}#}
+{#                                  </div>#}
+{#                                  <div class="form-group">#}
+{#                                    <label>Pan_num</label>#}
+{#                                    {{ form.pan_num }}#}
+{#                                  </div>#}
+{#                                    <div class="form-group">#}
+{#                                        <label>Address</label>#}
 {#                                        {{ form.address }}#}
-                                    </div>
-
-                                </div>
-                                <!-- /.card-body -->
-                            </div>
-                            </div>
-                            <!--/ left column -->
-
-                            <!-- right column -->
-                            <div class="col-md-6">
-                                <!-- general form elements disabled -->
-                                <div class="card card-warning">
-                                  <div class="card-header">
-                                    <h3 class="card-title">Owner Details</h3>
-                                  </div>
-                                  <!-- /.card-header -->
-                                  <div class="card-body">
-                                      <div class="row">
-                                        <div class="col-sm-6">
-                                          <!-- text input -->
-                                          <div class="form-group">
-                                            <label>First Name</label>
-                                            {{ form.first_name }}
-                                          </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                          <div class="form-group">
-                                            <label>Last Name</label>
-                                            {{ form.last_name }}
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="row">
-                                          <div class="col-sm-6">
-                                              <div class="form-group">
-                                                <label>Phone: {{ form.contact }}</label>
-                                              </div>
-                                          </div>
-                                          <div class="col-sm-6">
-                                              <div class="form-group">
-                                                <label>Mobile: {{ form.mobile }}</label>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <!-- /.card-body -->
-                                </div>
-                                <!-- /.card -->
-                            </div>
-                            <!--/.col (right) -->
-                            {{ form.created_by }}
-                            {{ form.created_on }}
-                        </div>
-                        <div class="row">
-                            <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </div>
-                            <div class="card-footer">
-                                <a href="{% url 'all-buyer' %}" class="btn btn-secondary">Cancel</a>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+{#                                    </div>#}
+{##}
+{#                                </div>#}
+{#                                <!-- /.card-body -->#}
+{#                            </div>#}
+{#                            </div>#}
+{#                            <!--/ left column -->#}
+{##}
+{#                            <!-- right column -->#}
+{#                            <div class="col-md-6">#}
+{#                                <!-- general form elements disabled -->#}
+{#                                <div class="card card-warning">#}
+{#                                  <div class="card-header">#}
+{#                                    <h3 class="card-title">Owner Details</h3>#}
+{#                                  </div>#}
+{#                                  <!-- /.card-header -->#}
+{#                                  <div class="card-body">#}
+{#                                      <div class="row">#}
+{#                                        <div class="col-sm-6">#}
+{#                                          <!-- text input -->#}
+{#                                          <div class="form-group">#}
+{#                                            <label>First Name</label>#}
+{#                                            {{ form.first_name }}#}
+{#                                          </div>#}
+{#                                        </div>#}
+{#                                        <div class="col-sm-6">#}
+{#                                          <div class="form-group">#}
+{#                                            <label>Last Name</label>#}
+{#                                            {{ form.last_name }}#}
+{#                                          </div>#}
+{#                                        </div>#}
+{#                                      </div>#}
+{#                                      <div class="row">#}
+{#                                          <div class="col-sm-6">#}
+{#                                              <div class="form-group">#}
+{#                                                <label>Phone: {{ form.contact }}</label>#}
+{#                                              </div>#}
+{#                                          </div>#}
+{#                                          <div class="col-sm-6">#}
+{#                                              <div class="form-group">#}
+{#                                                <label>Mobile: {{ form.mobile }}</label>#}
+{#                                              </div>#}
+{#                                          </div>#}
+{#                                      </div>#}
+{#                                  </div>#}
+{#                                  <!-- /.card-body -->#}
+{#                                </div>#}
+{#                                <!-- /.card -->#}
+{#                            </div>#}
+{#                            <!--/.col (right) -->#}
+{#                            {{ form.created_by }}#}
+{#                            {{ form.created_on }}#}
+{#                        </div>#}
+{#                        <div class="row">#}
+{#                            <div class="card-footer">#}
+{#                                <button type="submit" class="btn btn-primary">Submit</button>#}
+{#                            </div>#}
+{#                            <div class="card-footer">#}
+{#                                <a href="{% url 'all-buyer' %}" class="btn btn-secondary">Cancel</a>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </form>#}
+{#                </div>#}
                 <script>
                     var created_by_Id = "{{ user.id }}"
                     document.getElementById("created_by").value = created_by_Id

@@ -1,0 +1,29 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} Karunamaya Traders{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'kTradersApp/dist/css/adminlte.min.css' %}">
+    <!-- Add Bootstrap, FontAwesome, custom CSS as needed -->
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    {% include 'includes/topnav.html' %}
+
+    {% include 'includes/sidebar.html' %}
+
+    <div class="content-wrapper">
+        <section class="content">
+            base on templates by cgpt
+            {% block content %}{% endblock %}
+        </section>
+    </div>
+
+    {% include 'includes/footer.html' %}
+
+</div>
+</body>
+</html>
