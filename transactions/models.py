@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
-from kTradersApp.models import Buyer
+from people.models import Buyer
 
 
 # # Create your models here.

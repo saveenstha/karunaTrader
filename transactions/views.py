@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 
 from .models import Transaction
-from kTradersApp.models import Buyer
 from .forms import TransactionForm
 from django.contrib import messages
 from django.views import generic
@@ -41,4 +40,4 @@ class DeleteTransactionViews(generic.DeleteView):
 # class AddParticularsView(CreateView):
 #     model = ParticularsDetail
 #     form_class = ParticularsForm
-#     template_name = 'kTradersApp/buyer/add_particulars.html'
+#     template_name = 'mainapp/buyer/add_particulars.html'

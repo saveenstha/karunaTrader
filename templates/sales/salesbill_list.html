@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Sales Bills</h2>
+    <a href="{% url 'sales:salesbill-add' %}" class="btn btn-primary mb-3">Add Sale</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Buyer</th>
+                <th>Date</th>
+                <th>Vehicle No.</th>
+                <th>Transport Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for bill in salesbills %}
+            <tr>
+                <td>{{ bill.buyer.company_name }}</td>
+                <td>{{ bill.date }}</td>
+                <td>{{ bill.vehicle_number }}</td>
+                <td>{{ bill.transportation_cost }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No sales found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

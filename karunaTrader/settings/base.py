@@ -3,7 +3,7 @@ import os
 import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-
+print(BASE_DIR)
 # Initialize environment variables
 env = environ.Env(
     DEBUG=(bool, False)
@@ -26,8 +26,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'kTradersApp',
-    'transactions',
+    #custom apps
+    'mainapp',
+    'people',
+    'purchases',
+    'sales',
+    'inventory',
+    # 'transactions',
 ]
 
 MIDDLEWARE = [
@@ -93,14 +98,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
+# # static settings kept on settings.dev.py
+# STATIC_ROOT = BASE_DIR / 'static'
+# MEDIA_ROOT = BASE_DIR / 'media'
+#
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static'),
+# ]
 
-STATIC_ROOT = BASE_DIR / 'static'
-MEDIA_ROOT = BASE_DIR / 'media'
-
-LOGIN_REDIRECT_URL = 'landing_page'
-LOGOUT_REDIRECT_URL = 'login'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'login/'
 
 LOGGING = {
     'version': 1,
@@ -115,7 +122,6 @@ LOGGING = {
         'level': 'DEBUG',
     },
 }
-
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -8,7 +8,7 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('kTradersApp', '0007_auto_20240705_2122'),
+        ('mainapp', '0007_auto_20240705_2122'),
         ('transactions', '0004_transactions_balance_after_transaction'),
     ]
 
@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('transaction_type', models.CharField(choices=[('credit', 'Credit'), ('debit', 'Debit')], max_length=6)),
                 ('amount', models.DecimalField(decimal_places=2, max_digits=10)),
                 ('created_on', models.DateTimeField(default=django.utils.timezone.now)),
-                ('buyer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='transactions', to='kTradersApp.buyer')),
+                ('buyer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='transactions', to='mainapp.buyer')),
             ],
         ),
         migrations.DeleteModel(

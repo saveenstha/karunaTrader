@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Purchase Bills</h2>
+    <a href="{% url 'purchases:purchasebill-add' %}" class="btn btn-primary mb-3">Add Purchase</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Farmer</th>
+                <th>Date</th>
+                <th>Created On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchase in purchases %}
+            <tr>
+                <td>{{ purchase.farmer.name }}</td>
+                <td>{{ purchase.date }}</td>
+                <td>{{ purchase.created_on }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">No purchases found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

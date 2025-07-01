@@ -8,7 +8,7 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('kTradersApp', '0002_auto_20221021_0957'),
+        ('mainapp', '0002_auto_20221021_0957'),
         ('transactions', '0001_initial'),
     ]
 
@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('bill_number', models.IntegerField(unique=True)),
                 ('credit_amount', models.IntegerField(null=True)),
                 ('debit_amount', models.IntegerField(null=True)),
-                ('pan_num', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='kTradersApp.buyer')),
+                ('pan_num', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='mainapp.buyer')),
             ],
         ),
     ]

@@ -1,0 +1,34 @@
+{% extends 'base.html'%}
+{% block content %}
+<div class="container mt-4">
+  <h2>Daily Rates</h2>
+  <a href="{% url 'inventory:rate-calendar' %}" class="btn btn-success mb-3">View in Calendar</a>
+  <a href="{% url 'inventory:dailyrate-add' %}" class="btn btn-success mb-3">Add Daily Rate</a>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Daily Rate for Date</th>
+        <th>Purchase Rate for Date</th>
+        <th>Sale Rate for Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for dailyrate in dailyrates %}
+        <tr>
+          <td>{{ dailyrate.product }}</td>
+          <td>{{ dailyrate.date }}</td>
+          <td>{{ dailyrate.purchase_rate }}</td>
+          <td>{{ dailyrate.sale_rate }}</td>
+          <td>
+            <a href="{% url 'inventory:dailyrate-edit' dailyrate.pk %}" class="btn btn-primary btn-sm">Edit</a>
+{#            <a href="{% url 'inventory:dailyrate-delete' dailyrate.pk %}" class="btn btn-danger btn-sm">Delete</a>#}
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4">No dailyrates found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

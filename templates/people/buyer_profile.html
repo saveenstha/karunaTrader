@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ buyer.company_name }} - Profile</h2>
+<p>PAN Number: {{ buyer.pan_num }}</p>
+<p>Balance: Rs. {{ buyer.balance }}</p>
+<hr>
+<h4>Sales Transactions:</h4>
+<ul>
+  {% for bill in sales_bills %}
+    <li>{{ bill.date }} — Bill No. {{ bill.bill_number }} — Total: Rs. {{ bill.total_amount }}</li>
+  {% empty %}
+    <li>No sales found.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

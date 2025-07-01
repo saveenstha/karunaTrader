@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Add/Edit Sales Bill</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ formset.management_form }}
+        <hr>
+        <h4>Items</h4>
+        {% for form in formset %}
+            <div class="card mb-2 p-3">
+                {{ form.as_p }}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-success">Save</button>
+        <a href="{% url 'sales:salesbill-list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

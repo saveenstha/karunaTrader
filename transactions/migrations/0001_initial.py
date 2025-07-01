@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('kTradersApp', '0001_initial'),
+        ('mainapp', '0001_initial'),
     ]
 
     operations = [
@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('bill_number', models.IntegerField(unique=True)),
                 ('credit_amount', models.IntegerField(null=True)),
                 ('debit_amount', models.IntegerField(null=True)),
-                ('pan_num', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='kTradersApp.buyer')),
+                ('pan_num', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='mainapp.buyer')),
             ],
         ),
     ]

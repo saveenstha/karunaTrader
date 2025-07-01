@@ -1,0 +1,44 @@
+{% extends 'base.html'%}
+
+
+{% block title %}
+    Owner Profiles
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Owners</h2>
+  <a href="{% url 'people:ownerprofiles-add' %}" class="btn btn-success mb-3">Add Owner Profiles</a>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Company </th>
+        <th>First Name </th>
+        <th>Last Name </th>
+        <th>Address </th>
+        <th>Contact</th>
+        <th>Mobile</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ownerprofile in ownerprofiles %}
+        <tr>
+          <td>{{ ownerprofile.buyer }}</td>
+          <td>{{ ownerprofile.first_name }}</td>
+          <td>{{ ownerprofile.last_name }}</td>
+          <td>{{ ownerprofile.address }}</td>
+          <td>{{ ownerprofile.contact }}</td>
+          <td>{{ ownerprofile.mobile }}</td>
+
+          <td>
+            <a href="{% url 'people:ownerprofiles-edit' ownerprofile.pk %}" class="btn btn-primary btn-sm">Edit</a>
+{#            <a href="{% url 'people:ownerprofiles-delete' ownerprofile.pk %}" class="btn btn-danger btn-sm">Delete</a>#}
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="6">No Owner Profiles found. </td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

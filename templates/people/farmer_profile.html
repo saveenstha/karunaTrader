@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ farmer.name }} - Profile</h2>
+<p>Address: {{ farmer.address }}</p>
+<p>Contact: {{ farmer.contact }}</p>
+<hr>
+<h4>Purchase Transactions:</h4>
+<ul>
+  {% for bill in purchase_bills %}
+    <li>{{ bill.date }} — Bill No. {{ bill.bill_number }} — Total: Rs. {{ bill.total_amount }}</li>
+  {% empty %}
+    <li>No purchases found.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

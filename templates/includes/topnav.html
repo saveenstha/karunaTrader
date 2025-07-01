@@ -6,9 +6,20 @@
         <i class="fas fa-bars"></i>
       </a>
     </li>
-    <li class="nav-item d-none d-sm-inline-block">
-      <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
-    </li>
+
+
+
+    {% if user.is_authenticated %}
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+        </li>
+        <div class="dropdown-menu dropdown-menu-right">
+            dropdown
+            <a href="#" class="dropdown-item">Profile</a>
+            <div class="dropdown-divider"></div>
+            <a href="{% url 'logout' %}" class="dropdown-item">Logout</a>
+        </div>
+    {% endif %}
   </ul>
 
   <!-- Right navbar links -->
@@ -19,12 +30,13 @@
         <i class="fas fa-user-circle"></i> {{ user.username }}
       </a>
       <div class="dropdown-menu dropdown-menu-right">
-        <a href="#" class="dropdown-item">Profile</a>
+        <a href="#profile" class="dropdown-item">Profile</a>
         <div class="dropdown-divider"></div>
         <a href="{% url 'logout' %}" class="dropdown-item">Logout</a>
       </div>
     </li>
     {% else %}
+
     <li class="nav-item">
       <a href="{% url 'login' %}" class="nav-link">Login</a>
     </li>

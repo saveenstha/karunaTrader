@@ -1,4 +1,4 @@
-{% extends 'kTradersApp/base.html'%}
+{% extends 'mainapp/base.html'%}
 {% load static %}
 
 {% block title %}
@@ -66,7 +66,7 @@
 
                                             <td>
                                                 <a href="{% url 'buyer-profile' buyer.pk %}">
-                                              <img src="{% static 'kTradersApp/dist/img/default-150x150.png' %}" alt="Product 1" class="img-circle img-size-32 mr-2">
+                                              <img src="{% static 'mainapp/dist/img/default-150x150.png' %}" alt="Product 1" class="img-circle img-size-32 mr-2">
                                               {{ buyer }}
                                                 </a>
                                             </td>
