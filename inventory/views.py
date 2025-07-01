@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, TemplateView
+from django.views.generic import View, ListView, CreateView, DetailView, UpdateView, DeleteView, TemplateView
+from django.utils.timezone import make_aware
 
 import calendar
-# from calendar import monthrange
+from calendar import Calendar, month_name
+from dateutil.relativedelta import relativedelta
 from datetime import date, timedelta
 
 from .models import Product, DailyRate
@@ -98,23 +100,38 @@ class RateCalendarView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        today = date.today()
-        year, month = today.year, today.month
-        cal = calendar.Calendar(firstweekday=6)  # Week starts on Sunday
+        year = self.request.GET.get('year')
+        month = self.request.GET.get('month')
 
+        today = date.today()
+        year = int(year) if year else today.year
+        month = int(month) if month else today.month
+
+        cal = Calendar(firstweekday=6)
         month_dates = list(cal.itermonthdates(year, month))
         weeks = [month_dates[i:i + 7] for i in range(0, len(month_dates), 7)]
-        context['weekdays'] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+
+        # Month navigation helpers
+        prev_month = month - 1 if month > 1 else 12
+        prev_year = year - 1 if month == 1 else year
+        next_month = month + 1 if month < 12 else 1
+        next_year = year + 1 if month == 12 else year
 
         # Map {date: [rates]}
-        rate_map = {}
-        for day in month_dates:
-            rate_map[day] = DailyRate.objects.filter(date=day)
+        rate_map = {day: DailyRate.objects.filter(date=day) for day in month_dates}
+
 
         context.update({
             'weeks': weeks,
             'rate_map': rate_map,
-            'month_name': calendar.month_name[month],
+            'month_name': month_name[month],
+            'month': month,
             'year': year,
+            'weekdays': ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            'prev_year': prev_year,
+            'prev_month': prev_month,
+            'next_year': next_year,
+            'next_month': next_month,
         })
         return context
+

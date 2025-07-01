@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from .views import ProductListView, ProductCreateView, ProductDeleteView, ProductUpdateView, DailyRateListView, \
     DailyRateCreateView, DailyRateUpdateView, DailyRateDeleteView, RateCalendarView
-
+from datetime import date
 
 app_name = 'inventory'
 
