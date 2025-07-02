@@ -1,13 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View, ListView, CreateView, DetailView, UpdateView, DeleteView, TemplateView
 from django.utils.timezone import make_aware
+from django.forms import modelformset_factory
 
 import calendar
 from calendar import Calendar, month_name
 from dateutil.relativedelta import relativedelta
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
 
 from .models import Product, DailyRate
 from mainapp.forms import ProductForm, DailyRateForm
@@ -57,8 +59,49 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
 # Daily Rate CRUD
 class DailyRateListView(LoginRequiredMixin, ListView):
     model = DailyRate
-    template_name = 'inventory/dailyrate_list.html'
-    context_object_name = 'dailyrates'
+    template_name = 'inventory/rate_calendar.html'
+    context_object_name = 'rates'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        today = date.today()
+        year = self.request.GET.get('year', today.year)
+        month = self.request.GET.get('month', today.month)
+
+        year = int(year)
+        month = int(month)
+
+        cal = calendar.Calendar(firstweekday=6)  # Sunday start
+        month_dates = list(cal.itermonthdates(year, month))
+        weeks = [month_dates[i:i + 7] for i in range(0, len(month_dates), 7)]
+
+        # Fetch all rates in this month
+        all_rates = DailyRate.objects.filter(date__in=month_dates).select_related('product')
+
+        # Map: {date: [rates]}
+        rate_map = {}
+        for day in month_dates:
+            rate_map[day] = [rate for rate in all_rates if rate.date == day]
+
+        current_date = date(year, month, 1)
+        prev_date = current_date - relativedelta(months=1)
+        next_date = current_date + relativedelta(months=1)
+
+        context.update({
+            'weeks': weeks,
+            'rate_map': rate_map,
+            'month_name': calendar.month_name[month],
+            'month': month,
+            'year': year,
+            'prev_month': prev_date.month,
+            'prev_year': prev_date.year,
+            'next_month': next_date.month,
+            'next_year': next_date.year,
+            'weekdays': ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        })
+
+        return context
 
 
 class DailyRateCreateView(LoginRequiredMixin, CreateView):
@@ -76,17 +119,65 @@ class DailyRateCreateView(LoginRequiredMixin, CreateView):
         context['page_title'] = "Add dailyrate"
         return context
 
+#
+# class DailyRateCreateView(LoginRequiredMixin, TemplateView):
+#     template_name = 'inventory/dailyrate_formset.html'
+#
+#     def get(self, request, *args, **kwargs):
+#         RateFormSet = modelformset_factory(DailyRate, form=DailyRateForm, extra=0, can_delete=False)
+#         target_date_str = request.GET.get('date')
+#         target_date = date.today() if not target_date_str else date.fromisoformat(target_date_str)
+#
+#         # Products not yet assigned a rate for this date
+#         existing_products = DailyRate.objects.filter(date=target_date).values_list('product', flat=True)
+#         missing_products = Product.objects.exclude(id__in=existing_products)
+#
+#         # Prefill formset with products that are missing
+#         initial_data = [{'date': target_date, 'product': product} for product in missing_products]
+#         formset = RateFormSet(queryset=DailyRate.objects.none(), initial=initial_data)
+#
+#         return self.render_to_response({
+#             'formset': formset,
+#             'target_date': target_date,
+#             'page_title': f"Add Daily Rates for {target_date.strftime('%Y-%m-%d')}"
+#         })
+#
+#     def post(self, request, *args, **kwargs):
+#         RateFormSet = modelformset_factory(DailyRate, form=DailyRateForm, extra=0, can_delete=False)
+#         formset = RateFormSet(request.POST)
+#
+#         if formset.is_valid():
+#             instances = formset.save(commit=False)
+#             for instance in instances:
+#                 instance.created_by = request.user
+#                 instance.save()
+#             return redirect('inventory:dailyrate-list')
+#
+#         return self.render_to_response({
+#             'formset': formset,
+#             'target_date': request.POST.get('date'),
+#             'page_title': "Add Daily Rates",
+#         })
 
-class DailyRateUpdateView(LoginRequiredMixin, UpdateView):
-    model = DailyRate
-    form_class = DailyRateForm
-    template_name = 'inventory/dailyrate_form.html'
-    success_url = reverse_lazy('inventory:dailyrate-list')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['page_title'] = "Edit dailyrate"
-        return context
+class DailyRateUpdateView(LoginRequiredMixin, TemplateView):
+    template_name = 'inventory/dailyrate_edit_formset.html'
+
+    def get(self, request, date):
+        target_date = datetime.strptime(date, '%Y-%m-%d').date()
+        RateFormSet = modelformset_factory(DailyRate, form=DailyRateForm, extra=0)
+        formset = RateFormSet(queryset=DailyRate.objects.filter(date=target_date))
+        return self.render_to_response({'formset': formset, 'date': target_date})
+
+    def post(self, request, date):
+        target_date = datetime.strptime(date, '%Y-%m-%d').date()
+        RateFormSet = modelformset_factory(DailyRate, form=DailyRateForm, extra=0)
+        formset = RateFormSet(request.POST)
+
+        if formset.is_valid():
+            formset.save()
+            return redirect('inventory:rate-calendar')  # or wherever you'd like to redirect
+        return self.render_to_response({'formset': formset, 'date': target_date})
 
 
 class DailyRateDeleteView(LoginRequiredMixin, DeleteView):

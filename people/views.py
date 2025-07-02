@@ -147,7 +147,20 @@ class FarmerProfileView(LoginRequiredMixin, DetailView):
     template_name = 'people/farmer_profile.html'
     context_object_name = 'farmer'
 
+    def get_initial(self):
+        initial = super().get_initial()
+        farmer_id = self.request.GET.get('farmer_id')
+        if farmer_id:
+            initial['farmer'] = farmer_id
+        return initial
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['purchase_bills'] = PurchaseBill.objects.filter(farmer=self.object).order_by('-date')
+        purchase_bills = (
+            PurchaseBill.objects
+            .filter(farmer=self.object)
+            .prefetch_related('items__product')
+            .order_by('-date')
+        )
+        context['purchase_bills'] = purchase_bills
         return context

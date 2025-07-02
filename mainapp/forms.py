@@ -47,7 +47,14 @@ class ProductForm(BootstrapFormMixin, forms.ModelForm):
 class DailyRateForm(BootstrapFormMixin, forms.ModelForm):
     class Meta:
         model = DailyRate
-        fields = ['product', 'date', 'purchase_rate', 'sale_rate']
+        fields = ['product', 'date', 'purchase_rate', 'sales_rate']
+
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'product': forms.Select(attrs={'class': 'form-control'}),
+            'purchase_rate': forms.NumberInput(attrs={'class': 'form-control'}),
+            'sales_rate': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
 
 
 class PurchasesBillForm(BootstrapFormMixin, forms.ModelForm):
@@ -59,8 +66,13 @@ class PurchasesBillForm(BootstrapFormMixin, forms.ModelForm):
 class PurchaseItemForm(BootstrapFormMixin, forms.ModelForm):
     class Meta:
         model = PurchaseItem
-        fields = [ 'purchase_bill_number','product', 'sacks', 'weight_kg', 'rate_per_kg']
-
+        fields = ['product', 'sacks', 'weight_kg', 'rate_per_kg']
+        widgets = {
+            'product': forms.Select(attrs={'class': 'form-control'}),
+            'sacks': forms.NumberInput(attrs={'class': 'form-control'}),
+            'weight_kg': forms.NumberInput(attrs={'class': 'form-control'}),
+            'rate_per_kg': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
 
 class SalesBillForm(BootstrapFormMixin, forms.ModelForm):
     class Meta:

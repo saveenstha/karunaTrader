@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-4">
+  <h3 class="mb-4">{{ page_title }}</h3>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ formset.management_form }}
+
+  {% for form in formset %}
+      <div class="card p-3 mb-3">
+        {{ form.non_field_errors }}
+        <div class="row">
+          <div class="col-md-3">
+            {{ form.date.label_tag }}
+            {{ form.date }}
+            {% for error in form.date.errors %}
+              <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-md-3">
+            {{ form.product.label_tag }}
+            {{ form.product }}
+            {% for error in form.product.errors %}
+              <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-md-3">
+            {{ form.purchase_rate.label_tag }}
+            {{ form.purchase_rate }}
+            {% for error in form.purchase_rate.errors %}
+              <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-md-3">
+            {{ form.sales_rate.label_tag }}
+            {{ form.sales_rate }}
+            {% for error in form.sales_rate.errors %}
+              <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+
+    <button type="submit" class="btn btn-primary">Save Rates</button>
+  </form>
+</div>
+{% endblock %}

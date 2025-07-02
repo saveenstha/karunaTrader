@@ -11,4 +11,7 @@ urlpatterns = [
     path('purchases/add/', PurchaseBillCreateView.as_view(), name='purchasebill-add'),
     path('purchases/edit/<int:pk>/', PurchaseBillUpdateView.as_view(), name='purchasebill-edit'),
     path('purchases/delete/<int:pk>/', PurchaseBillDeleteView.as_view(), name='purchasebill-delete'),
+
+    path('purchaseitem/add/<int:bill_id>/', PurchaseItemCreateView.as_view(), name='purchaseitem-add'),
+
 ]

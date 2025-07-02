@@ -2,9 +2,9 @@ from django.db import models
 from people.models import Farmer
 from inventory.models import Product
 
+
 # -- Purchase Models --
 # Purchases from farmers
-
 class PurchaseBill(models.Model):
     farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE)
     date = models.DateField()

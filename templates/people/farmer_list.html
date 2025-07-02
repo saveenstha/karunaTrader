@@ -15,7 +15,7 @@
     <tbody>
       {% for farmer in farmers %}
         <tr>
-          <td>{{ farmer.name }}</td>
+          <td><a href="{% url 'people:farmer-profile' farmer.pk %}"> {{ farmer.name }}</a></td>
           <td>{{ farmer.contact }}</td>
           <td>{{ farmer.address }}</td>
           <td>

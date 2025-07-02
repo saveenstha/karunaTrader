@@ -14,7 +14,7 @@ class DailyRate(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     date = models.DateField()
     purchase_rate = models.DecimalField(max_digits=6, decimal_places=2, default=0)
-    sale_rate = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+    sales_rate = models.DecimalField(max_digits=6, decimal_places=2, default=0)
 
     class Meta:
         unique_together = ('product', 'date')

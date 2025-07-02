@@ -15,7 +15,8 @@ urlpatterns = [
 
     path('dailyrates/', DailyRateListView.as_view(), name='dailyrate-list'),
     path('dailyrates/add/', DailyRateCreateView.as_view(), name='dailyrate-add'),
-    path('dailyrates/edit/<int:pk>/', DailyRateUpdateView.as_view(), name='dailyrate-edit'),
+    # path('dailyrates/edit/<int:pk>/', DailyRateUpdateView.as_view(), name='dailyrate-edit'),
+    path('dailyrates/edit/<str:date>/', DailyRateUpdateView.as_view(), name='dailyrate-edit'),
     path('dailyrates/delete/<int:pk>/', DailyRateDeleteView.as_view(), name='dailyrate-delete'),
 
     path('calendar/', RateCalendarView.as_view(), name='rate-calendar'),

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h4>Edit Rates for {{ date }}</h4>
+  <form method="post">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Purchase Rate</th>
+          <th>Sales Rate</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for form in formset %}
+          <tr>
+            <td>{{ form.product }}</td>
+            <td>{{ form.purchase_rate }}</td>
+            <td>{{ form.sales_rate }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button class="btn btn-primary" type="submit">Save</button>
+    <a href="{% url 'inventory:rate-calendar' %}" class="btn btn-secondary">Back</a>
+  </form>
+</div>
+{% endblock %}
+

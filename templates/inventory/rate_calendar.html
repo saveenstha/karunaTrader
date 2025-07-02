@@ -25,7 +25,10 @@
     <div class="row text-center">
       {% for day in week %}
         <div class="col border py-2">
-          <div class="fw-bold">{{ day.day }}</div>
+{#          <div class="fw-bold">{{ day.day }}</div>#}
+        <div class="fw-bold">
+          <a href="{% url 'inventory:dailyrate-edit' date=day %}">{{ day.day }}</a>
+        </div>
           <div class="small text-start">
             {% for rate in rate_map|get_item:day %}
               <div>{{ rate.product.name }}: Rs.{{ rate.purchase_rate }}</div>

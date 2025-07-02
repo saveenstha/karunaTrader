@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 from django.db import models
+from django.db.models import Sum, F, DecimalField
 
 from .models import *
 from .forms import *
@@ -11,8 +12,8 @@ from .forms import *
 from datetime import date
 from .utils import get_season_range, get_available_seasons
 from people.models import Buyer, Farmer
-# from purchases.models import PurchaseBill
-# from sales.models import SalesBill
+from purchases.models import PurchaseBill, PurchaseItem
+from sales.models import SalesBill, SalesItem
 
 User = get_user_model()
 
@@ -39,34 +40,73 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
         season_start, season_end = get_season_range(year, season)
 
-        # Query filtering
-    #     purchases = PurchaseBill.objects.filter(date__range=(season_start, season_end))
-    #     sales = SalesBill.objects.filter(date__range=(season_start, season_end))
+        # Filter bills by date range
+        purchases = PurchaseBill.objects.filter(date__range=(season_start, season_end))
+        sales = SalesBill.objects.filter(date__range=(season_start, season_end))
     #
-        # Aggregations
-    #     total_purchase_kg = purchases.aggregate(models.Sum('quantity_kg'))['quantity_kg__sum'] or 0
-    #     total_sale_kg = sales.aggregate(models.Sum('quantity_kg'))['quantity_kg__sum'] or 0
-    #     total_purchase_value = purchases.aggregate(total=models.Sum(
-    #         models.F('quantity_kg') * models.F('price_per_kg'),
-    #         output_field=models.DecimalField()))['total'] or 0
-    #     total_sale_value = sales.aggregate(total=models.Sum(
-    #         models.F('quantity_kg') * models.F('price_per_kg'),
-    #         output_field=models.DecimalField()))['total'] or 0
-    #
+        # Aggregate values
+        # Filter related items via bills
+        purchase_items = PurchaseItem.objects.filter(purchase_bill_number__in=purchases)
+        sales_items = SalesItem.objects.filter(sales_bill_number__in=sales)
+
+        # Aggregate quantities and totals
+        total_purchase_kg = purchase_items.aggregate(Sum('weight_kg'))['weight_kg__sum'] or 0
+        total_sale_kg = sales_items.aggregate(Sum('weight_kg'))['weight_kg__sum'] or 0
+
+        total_purchase_value = purchase_items.aggregate(
+            total=Sum(F('weight_kg') * F('rate_per_kg'), output_field=DecimalField())
+        )['total'] or 0
+
+        total_sale_value = sales_items.aggregate(
+            total=Sum(F('weight_kg') * F('rate_per_kg'), output_field=DecimalField())
+        )['total'] or 0
+
+        top_sold_products = sales_items.values('product__name').annotate(
+            total_weight=Sum('weight_kg'),
+            total_revenue=Sum(F('weight_kg') * F('rate_per_kg'), output_field=DecimalField())
+        ).order_by('-total_weight')[:5]
+
+        top_purchased_products = purchase_items.values('product__name').annotate(
+            total_weight=Sum('weight_kg'),
+            total_cost=Sum(F('weight_kg') * F('rate_per_kg'), output_field=DecimalField())
+        ).order_by('-total_weight')[:5]
+
+        buyer_summary = sales_items.values('sales_bill_number__buyer__company_name').annotate(
+            total_weight=Sum('weight_kg'),
+            total_value=Sum(F('weight_kg') * F('rate_per_kg'), output_field=DecimalField())
+        )
+
+        farmer_summary = purchase_items.values('purchase_bill_number__farmer__name').annotate(
+            total_weight=Sum('weight_kg'),
+            total_value=Sum(F('weight_kg') * F('rate_per_kg'), output_field=DecimalField())
+        )
+
+        transport_total = sales.aggregate(Sum('transportation_cost'))['transportation_cost__sum'] or 0
+
+        transport_by_buyer = sales.values('buyer__company_name').annotate(
+            total_transport=Sum('transportation_cost')
+        )
+
     #     # Context
         context.update({
             'total_buyers': Buyer.objects.count(),
             'total_farmers': Farmer.objects.count(),
-    #         'total_purchase_kg': total_purchase_kg,
-    #         'total_sale_kg': total_sale_kg,
-    #         'profit': total_sale_value - total_purchase_value,
+            'total_purchase_kg': total_purchase_kg,
+            'total_sale_kg': total_sale_kg,
+            'profit': total_sale_value - total_purchase_value,
             'selected_year': year,
             'selected_season': season,
-    #         'available_seasons': get_available_seasons(),
+            'available_seasons': get_available_seasons(),
+            'top_sold_products': top_sold_products,
+            'top_purchased_products': top_purchased_products,
+            'buyer_summary': buyer_summary,
+            'farmer_summary': farmer_summary,
+            'transport_total': transport_total,
+            'transport_by_buyer': transport_by_buyer,
         })
         return context
 
-#
+
 # User models CRUD
 class UserListView(ListView):
     model = User

@@ -88,7 +88,7 @@ class SalesBillUpdateView(LoginRequiredMixin, UpdateView):
                     product = item_form.cleaned_data["product"]
                     rate = DailyRate.objects.filter(product=product, date=self.object.date).first()
                     if rate:
-                        item_form.instance.rate = rate.sale_rate
+                        item_form.instance.rate = rate.sales_rate
             formset.save()
             return redirect(self.success_url)
         return self.form_invalid(form)

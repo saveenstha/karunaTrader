@@ -10,7 +10,7 @@
         <th>Product Name</th>
         <th>Daily Rate for Date</th>
         <th>Purchase Rate for Date</th>
-        <th>Sale Rate for Date</th>
+        <th>Sales Rate for Date</th>
       </tr>
     </thead>
     <tbody>
@@ -19,9 +19,9 @@
           <td>{{ dailyrate.product }}</td>
           <td>{{ dailyrate.date }}</td>
           <td>{{ dailyrate.purchase_rate }}</td>
-          <td>{{ dailyrate.sale_rate }}</td>
+          <td>{{ dailyrate.sales_rate }}</td>
           <td>
-            <a href="{% url 'inventory:dailyrate-edit' dailyrate.pk %}" class="btn btn-primary btn-sm">Edit</a>
+            <a href="{% url 'inventory:dailyrate-edit' date=day %}" class="btn btn-primary btn-sm">Edit</a>
 {#            <a href="{% url 'inventory:dailyrate-delete' dailyrate.pk %}" class="btn btn-danger btn-sm">Delete</a>#}
           </td>
         </tr>

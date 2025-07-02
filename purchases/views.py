@@ -1,7 +1,7 @@
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, TemplateView
 from django.forms import inlineformset_factory
-from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
+from django.shortcuts import redirect, render, get_object_or_404, redirect
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import PurchaseBill, PurchaseItem
@@ -65,3 +65,25 @@ class PurchaseBillDeleteView(LoginRequiredMixin, DeleteView):
     model = PurchaseBill
     template_name = 'mainapp/confirm_delete.html'
     success_url = reverse_lazy('purchase-list')
+
+
+class PurchaseItemCreateView(LoginRequiredMixin, CreateView):
+    model = PurchaseItem
+    form_class = PurchaseItemForm
+    template_name = 'purchases/purchaseitem_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.purchase_bill = get_object_or_404(PurchaseBill, pk=kwargs['bill_id'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.purchase_bill_number = self.purchase_bill
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['purchase_bill'] = self.purchase_bill
+        return context
+
+    def get_success_url(self):
+        return reverse('people:farmer-profile', args=[self.purchase_bill.farmer.id])
