@@ -1,15 +1,91 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
+{% load dict_get %}
+
 {% block content %}
-<h2>{{ buyer.company_name }} - Profile</h2>
-<p>PAN Number: {{ buyer.pan_num }}</p>
-<p>Balance: Rs. {{ buyer.balance }}</p>
-<hr>
-<h4>Sales Transactions:</h4>
-<ul>
+<div class="container mt-4">
+  <h2>{{ buyer.company_name }} – Profile</h2>
+
+  <a href="{% url 'sales:salesbill-add' %}" class="btn btn-success my-3">Add New Sales Bill</a>
+
   {% for bill in sales_bills %}
-    <li>{{ bill.date }} — Bill No. {{ bill.bill_number }} — Total: Rs. {{ bill.total_amount }}</li>
+    <div class="card mb-3">
+      <div class="card-header d-flex justify-content-between">
+        <div>
+            <strong>Sales Bill:</strong> {{ bill.sales_bill_number }} |
+            <strong>Date:</strong> {{ bill.date }} |
+            <strong>Vehicle:</strong> {{ bill.vehicle_number }} |
+            <strong>Transport Cost:</strong> Rs.{{ bill.transportation_cost }}
+        </div>
+        <div>
+          <a href="{% url 'sales:salesbill-update' bill.pk %}" class="btn btn-sm btn-outline-primary">Edit Bill</a>
+        </div>
+      </div>
+      <div class="card-body p-0">
+        <table class="table table-sm mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Product</th>
+              <th>Sacks</th>
+              <th>Weight (kg)</th>
+              <th>Rate (Rs)</th>
+              <th>Total Price</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in bill.items.all %}
+              <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.sacks }}</td>
+                <td>{{ item.weight_kg }}</td>
+                <td>{{ item.rate_per_kg }}</td>
+                <td>{{ item.total_price|floatformat:2 }}</td>
+                 <td>
+                  <button
+                    class="btn btn-sm btn-outline-secondary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editItemModal{{ item.pk }}">
+                    Edit
+                  </button>
+                  <a href="{% url 'sales:salesitem-delete' item.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                </td>
+              </tr>
+
+                 <!-- Modal for editing SalesItem -->
+                  <div class="modal fade" id="editItemModal{{ item.pk }}" tabindex="-1" aria-labelledby="editItemLabel{{ item.pk }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <form method="post" action="{% url 'sales:salesitem-edit' item.pk %}">
+                          {% csrf_token %}
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="editItemLabel{{ item.pk }}">Edit Item – {{ item.product.name }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                             {% with form=item_forms|get_item:item.pk %}
+                                  {{ form.as_p }}
+                              {% endwith %}
+                            </div>
+                          <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+            {% empty %}
+{#              <tr><td colspan="6"> No items in this bill.</td></tr>#}
+                <p class="text-muted">No sales bills for this buyer.</p>
+
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
   {% empty %}
-    <li>No sales found.</li>
+    <p>No sales records found.</p>
   {% endfor %}
-</ul>
+</div>
 {% endblock %}

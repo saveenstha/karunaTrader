@@ -7,6 +7,7 @@
 
 {% block content %}
 
+    <!-- Select Season Form-->
     <form method="get" class="form-inline mb-4">
       <label for="seasonSelect" class="mr-2">Select Season:</label>
       <select name="year" class="form-control mr-2">
@@ -31,6 +32,7 @@
   <div class="row">
     <!-- Total Buyers -->
     <div class="col-lg-3 col-6">
+    <a href="{% url 'people:buyer-list' %}" >
       <div class="small-box bg-info">
         <div class="inner">
           <h3>{{ total_buyers }}</h3>
@@ -40,10 +42,12 @@
           <i class="fas fa-users"></i>
         </div>
       </div>
+    </a>
     </div>
 
     <!-- Total Farmers -->
     <div class="col-lg-3 col-6">
+    <a href="{% url 'people:farmer-list' %}" >
       <div class="small-box bg-secondary">
         <div class="inner">
           <h3>{{ total_farmers }}</h3>
@@ -53,10 +57,12 @@
           <i class="fas fa-tractor"></i>
         </div>
       </div>
+    </a>
     </div>
 
     <!-- Total Purchases -->
     <div class="col-lg-3 col-6">
+    <a href="{% url 'purchases:purchasebill-list' %}" >
       <div class="small-box bg-warning">
         <div class="inner">
           <h3>{{ total_purchase_kg }} kg</h3>
@@ -66,10 +72,12 @@
           <i class="fas fa-arrow-down"></i>
         </div>
       </div>
+    </a>
     </div>
 
     <!-- Total Sales -->
     <div class="col-lg-3 col-6">
+    <a href="{% url 'sales:salesbill-list' %}" >
       <div class="small-box bg-primary">
         <div class="inner">
           <h3>{{ total_sale_kg }} kg</h3>
@@ -79,14 +87,13 @@
           <i class="fas fa-arrow-up"></i>
         </div>
       </div>
+    </a>
     </div>
+
 
     <!-- Profit -->
     <div class="col-lg-6 col-12">
-
-        <div {% if profit <= 0 %} class="small-box bg-danger" {% else %} class="small-box bg-success">
-
-        {% endif %}
+        <div {% if profit <= 0 %} class="small-box bg-danger" {% else %} class="small-box bg-success" {% endif %}>
             <div class="inner">
               <h3>Rs. {{ profit }}</h3>
               <p>Net Profit</p>
@@ -96,10 +103,47 @@
             </div>
         </div>
     </div>
-  </div>
-    <div class="col-sm-6 card">
-        <div class="card-body">
 
+  <!-- Total Purchases -->
+    <div class="col-lg-3 col-6">
+    <a href="{% url 'purchases:purchasebill-list' %}" >
+      <div class="small-box bg-gradient-danger">
+        <div class="inner">
+          <h3>Nrs: {{ total_purchase_value|floatformat:"0"  }} </h3>
+          <p>Purchased (Total)</p>
+        </div>
+        <div class="icon">
+          <i class="fas fa-credit-card"></i>
+        </div>
+      </div>
+    </a>
+    </div>
+
+    <!-- Total Income -->
+    <div class="col-lg-3 col-6">
+    <a href="{% url 'sales:salesbill-list' %}" >
+      <div class="small-box bg-gradient-success">
+        <div class="inner">
+          <h3>Nrs: {{ total_sale_value|floatformat:"0"  }}</h3>
+          <p>Sales : (Total)</p>
+        </div>
+        <div class="icon">
+          <i class="fas fa-dollar-sign"></i>
+        </div>
+      </div>
+    </a>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-lg-6 col-12 card">
+        <div class="card">
+        </div>
+    </div>
+
+    <div class="col-lg-6 col-12 card">
+        <div class="card-body">
         <h5>Top Sold Products</h5>
         <table class="table table-sm">
           <thead><tr><th>Product</th><th>Weight (kg)</th><th>Revenue (Rs)</th></tr></thead>
@@ -117,5 +161,6 @@
         </table>
         </div>
     </div>
+  </div>
 </div>
 {% endblock %}

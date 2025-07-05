@@ -97,4 +97,68 @@ class SalesBillUpdateView(LoginRequiredMixin, UpdateView):
 class SalesBillDeleteView(LoginRequiredMixin, DeleteView):
     model = SalesBill
     template_name = 'mainapp/confirm_delete.html'
-    template_name = 'sales/salesbill_confirm_delete.html'
+    # template_name = 'sales/salesbill_confirm_delete.html'
+
+
+class SalesItemCreateView(LoginRequiredMixin, CreateView):
+    model = SalesItem
+    form_class = SalesItemForm
+    template_name = 'sales/salesitem_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.sales_bill = get_object_or_404(salesBill, pk=kwargs['bill_id'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.sales_bill_number = self.sales_bill
+
+        # Automatically set rate from DailyRate if available
+        rate = DailyRate.objects.filter(product=form.instance.product, date=self.sales_bill.date).first()
+        if rate:
+            form.instance.rate_per_kg = rate.sales_rate
+
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sales_bill'] = self.sales_bill
+        return context
+
+    def get_success_url(self):
+        return reverse('people:farmer-profile', args=[self.sales_bill.farmer.id])
+
+
+class SalesItemEditView(LoginRequiredMixin, UpdateView):
+    model = SalesItem
+    form_class = SalesItemForm
+    template_name = 'sales/salesitem_edit_formset.html'
+
+    def post(self, request, pk):
+        item = get_object_or_404(SalesItem, pk=pk)
+        form = SalesItemForm(request.POST, instance=item)
+        if form.is_valid():
+            form.save()
+        return redirect('buyers:buyer-profile', pk=item.sales_bill_number.buyer.pk)
+
+    def form_valid(self, form):
+        # Optional: Update rate dynamically based on date/product change
+        sales_bill = form.instance.sales_bill_number
+        rate = DailyRate.objects.filter(product=form.instance.product, date=sales_bill.date).first()
+        if rate:
+            form.instance.rate_per_kg = rate.sales_rate
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('people:buyer-profile', kwargs={
+            'pk': self.object.sales_bill_number.farmer.pk
+        })
+
+
+class SalesItemDeleteView(LoginRequiredMixin, DeleteView):
+    model = SalesItem
+    template_name = 'saless/salesitem_confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse_lazy('people:buyer-profile', kwargs={
+            'pk': self.object.sales_bill_number.farmer.pk
+        })

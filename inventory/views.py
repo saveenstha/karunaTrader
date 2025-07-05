@@ -119,46 +119,6 @@ class DailyRateCreateView(LoginRequiredMixin, CreateView):
         context['page_title'] = "Add dailyrate"
         return context
 
-#
-# class DailyRateCreateView(LoginRequiredMixin, TemplateView):
-#     template_name = 'inventory/dailyrate_formset.html'
-#
-#     def get(self, request, *args, **kwargs):
-#         RateFormSet = modelformset_factory(DailyRate, form=DailyRateForm, extra=0, can_delete=False)
-#         target_date_str = request.GET.get('date')
-#         target_date = date.today() if not target_date_str else date.fromisoformat(target_date_str)
-#
-#         # Products not yet assigned a rate for this date
-#         existing_products = DailyRate.objects.filter(date=target_date).values_list('product', flat=True)
-#         missing_products = Product.objects.exclude(id__in=existing_products)
-#
-#         # Prefill formset with products that are missing
-#         initial_data = [{'date': target_date, 'product': product} for product in missing_products]
-#         formset = RateFormSet(queryset=DailyRate.objects.none(), initial=initial_data)
-#
-#         return self.render_to_response({
-#             'formset': formset,
-#             'target_date': target_date,
-#             'page_title': f"Add Daily Rates for {target_date.strftime('%Y-%m-%d')}"
-#         })
-#
-#     def post(self, request, *args, **kwargs):
-#         RateFormSet = modelformset_factory(DailyRate, form=DailyRateForm, extra=0, can_delete=False)
-#         formset = RateFormSet(request.POST)
-#
-#         if formset.is_valid():
-#             instances = formset.save(commit=False)
-#             for instance in instances:
-#                 instance.created_by = request.user
-#                 instance.save()
-#             return redirect('inventory:dailyrate-list')
-#
-#         return self.render_to_response({
-#             'formset': formset,
-#             'target_date': request.POST.get('date'),
-#             'page_title': "Add Daily Rates",
-#         })
-
 
 class DailyRateUpdateView(LoginRequiredMixin, TemplateView):
     template_name = 'inventory/dailyrate_edit_formset.html'

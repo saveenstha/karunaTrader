@@ -56,7 +56,15 @@ class BuyerProfileView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['sales_bills'] = SalesBill.objects.filter(buyer=self.object).order_by('-date')
+        sales_bills = SalesBill.objects.filter(buyer=self.object).prefetch_related('items').order_by('-date')
+        item_forms = {}
+        for bill in sales_bills:
+            for item in bill.items.all():
+                item_forms[item.pk] = SalesItemForm(instance=item)
+        context.update({
+            'sales_bills': sales_bills,
+            'item_forms': item_forms
+        })
         return context
 
 

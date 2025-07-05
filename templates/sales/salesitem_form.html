@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container my-4">
-  <h3>Add Item to Bill: {{ purchase_bill.purchase_bill_number }}</h3>
+  <h3>Add Item to Bill: {{ sales_bill.sales_bill_number }}</h3>
   <form method="post">
     {% csrf_token %}
     <div class="mb-3">
@@ -17,7 +17,7 @@
       {{ form.rate_per_kg.label_tag }} {{ form.rate_per_kg }}
     </div>
     <button type="submit" class="btn btn-primary">Add Item</button>
-    <a href="{% url 'people:farmer-profile' purchase_bill.farmer.id %}" class="btn btn-secondary">Cancel</a>
+    <a href="{% url 'people:buyer-profile' sales_bill.buyer.id %}" class="btn btn-secondary">Cancel</a>
   </form>
 
 </div>

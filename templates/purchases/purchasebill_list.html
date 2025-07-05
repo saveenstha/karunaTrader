@@ -8,16 +8,20 @@
             <tr>
                 <th>Farmer</th>
                 <th>Date</th>
+                <th>Bill Number</th>
                 <th>Created On</th>
             </tr>
         </thead>
         <tbody>
             {% for purchase in purchases %}
             <tr>
-                <td>{{ purchase.farmer.name }}</td>
-                <td>{{ purchase.date }}</td>
+                <td><a href="{% url 'people:farmer-profile' purchase.farmer.id %}">{{ purchase.farmer.name }}</a></td>
+                <td><a href="{% url 'people:farmer-profile' purchase.farmer.id %}">{{ purchase.date }}</a></td>
+                <td><a href="{% url 'people:farmer-profile' purchase.farmer.id %}">{{ purchase.purchase_bill_number }}</a></td>
                 <td>{{ purchase.created_on }}</td>
             </tr>
+
+            </a>
             {% empty %}
             <tr>
                 <td colspan="3">No purchases found.</td>

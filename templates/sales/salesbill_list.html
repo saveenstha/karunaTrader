@@ -14,12 +14,12 @@
         </thead>
         <tbody>
 
-            {% for bill in salesbills %}
+            {% for sales in salesbills %}
             <tr>
-                <td>{{ bill.buyer.company_name }}</td>
-                <td>{{ bill.date }}</td>
-                <td>{{ bill.vehicle_number }}</td>
-                <td>{{ bill.transportation_cost }}</td>
+                <td><a href="{% url 'people:buyer-profile' sales.buyer.pk %}">{{ sales.buyer.company_name }}</a></td>
+                <td>{{ sales.date }}</td>
+                <td>{{ sales.vehicle_number }}</td>
+                <td>{{ sales.transportation_cost }}</td>
             </tr>
             {% empty %}
             <tr>

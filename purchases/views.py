@@ -14,6 +14,10 @@ class PurchaseBillListView(LoginRequiredMixin, ListView):
     model = PurchaseBill
     template_name = 'mainapp/purchasebill_list.html'
     context_object_name = 'purchases'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return PurchaseBill.objects.all().order_by('-purchase_bill_number') # Replace 'field_name'
 
 
 class PurchaseBillCreateView(LoginRequiredMixin, CreateView):
@@ -78,6 +82,12 @@ class PurchaseItemCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.purchase_bill_number = self.purchase_bill
+
+        # Automatically set rate from DailyRate if available
+        rate = DailyRate.objects.filter(product=form.instance.product, date=self.purchase_bill.date).first()
+        if rate:
+            form.instance.rate_per_kg = rate.purchase_rate
+
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -87,3 +97,32 @@ class PurchaseItemCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse('people:farmer-profile', args=[self.purchase_bill.farmer.id])
+
+
+class PurchaseItemEditView(LoginRequiredMixin, UpdateView):
+    model = PurchaseItem
+    form_class = PurchaseItemForm
+    template_name = 'purchases/purchaseitem_edit_formset.html'
+
+    def form_valid(self, form):
+        # Optional: Update rate dynamically based on date/product change
+        purchase_bill = form.instance.purchase_bill_number
+        rate = DailyRate.objects.filter(product=form.instance.product, date=purchase_bill.date).first()
+        if rate:
+            form.instance.rate_per_kg = rate.purchase_rate
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('farmers:farmer-profile', kwargs={
+            'pk': self.object.purchase_bill_number.farmer.pk
+        })
+
+
+class PurchaseItemDeleteView(LoginRequiredMixin, DeleteView):
+    model = PurchaseItem
+    template_name = 'purchases/purchaseitem_confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse_lazy('farmers:farmer-profile', kwargs={
+            'pk': self.object.purchase_bill_number.farmer.pk
+        })

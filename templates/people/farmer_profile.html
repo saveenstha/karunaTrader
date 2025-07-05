@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container mt-4">
-  <h3>Farmer: {{ farmer.name }}</h3>
+  <h3>{{ farmer.name.capitalize }}'s Purchase History </h3>
   <a href="{% url 'purchases:purchasebill-add' %}?farmer_id={{ farmer.id }}" class="btn btn-success my-3">Add New Purchase Bill</a>
 
   {% for bill in purchase_bills %}
@@ -22,7 +22,8 @@
                 <th>Sacks</th>
                 <th>Weight (kg)</th>
                 <th>Rate (Rs/kg)</th>
-                <th>Total</th>
+                <th>Total Price</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -32,13 +33,18 @@
                   <td>{{ item.sacks }}</td>
                   <td>{{ item.weight_kg }}</td>
                   <td>{{ item.rate_per_kg }}</td>
-                  <td>{{ item.total_price }}</td>
+                  <td>{{ item.total_price|floatformat:2 }}</td>
+                <td>
+                  <a href="{% url 'purchases:purchaseitem-edit' item.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                  <a href="{% url 'purchases:purchaseitem-delete' item.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                </td>
                 </tr>
+
               {% endfor %}
             </tbody>
           </table>
         {% else %}
-          <div class="text-muted">No items recorded yet.</div>
+          <div class="text-muted">No items in this bill</div>
         {% endif %}
       </div>
     </div>

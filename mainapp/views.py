@@ -99,6 +99,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             'available_seasons': get_available_seasons(),
             'top_sold_products': top_sold_products,
             'top_purchased_products': top_purchased_products,
+            'total_sale_value': total_sale_value,
+            'total_purchase_value': total_purchase_value,
             'buyer_summary': buyer_summary,
             'farmer_summary': farmer_summary,
             'transport_total': transport_total,

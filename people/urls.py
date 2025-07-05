@@ -10,7 +10,7 @@ urlpatterns = [
     path('buyers/add/', BuyerCreateView.as_view(), name='buyer-add'),
     path('buyers/edit/<str:pk>/', BuyerUpdateView.as_view(), name='buyer-edit'),
     path('buyers/delete/<str:pk>/', BuyerDeleteView.as_view(), name='buyer-delete'),
-    path('buyers/profile/<str:pk>/', BuyerProfileView.as_view(), name='buyer-profile'),
+    path('buyers/profile/<int:pk>/', BuyerProfileView.as_view(), name='buyer-profile'),
 
     path('ownerprofiles/', OwnerProfilesListView.as_view(), name='ownerprofiles-list'),
     path('ownerprofiles/add/', OwnerProfilesCreateView.as_view(), name='ownerprofiles-add'),
