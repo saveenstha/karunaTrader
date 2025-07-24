@@ -7,19 +7,6 @@
       </a>
     </li>
 
-
-
-    {% if user.is_authenticated %}
-        <li class="nav-item d-none d-sm-inline-block">
-          <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
-        </li>
-        <div class="dropdown-menu dropdown-menu-right">
-            dropdown
-            <a href="#" class="dropdown-item">Profile</a>
-            <div class="dropdown-divider"></div>
-            <a href="{% url 'logout' %}" class="dropdown-item">Logout</a>
-        </div>
-    {% endif %}
   </ul>
 
   <!-- Right navbar links -->
@@ -32,7 +19,10 @@
       <div class="dropdown-menu dropdown-menu-right">
         <a href="#profile" class="dropdown-item">Profile</a>
         <div class="dropdown-divider"></div>
-        <a href="{% url 'logout' %}" class="dropdown-item">Logout</a>
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="dropdown-item">Log Out</button>
+        </form>
       </div>
     </li>
     {% else %}

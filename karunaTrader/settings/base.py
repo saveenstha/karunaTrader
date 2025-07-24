@@ -3,7 +3,7 @@ import os
 import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-print(BASE_DIR)
+
 # Initialize environment variables
 env = environ.Env(
     DEBUG=(bool, False)
@@ -105,9 +105,9 @@ USE_TZ = True
 # STATICFILES_DIRS = [
 #     os.path.join(BASE_DIR, 'static'),
 # ]
-
+LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
-LOGOUT_REDIRECT_URL = 'login/'
+LOGOUT_REDIRECT_URL = 'login'
 
 LOGGING = {
     'version': 1,

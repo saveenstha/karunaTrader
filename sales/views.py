@@ -19,22 +19,6 @@ class SalesBillListView(LoginRequiredMixin, ListView):
     context_object_name = 'salesbills'
 
 
-# class SalesBillCreateView(LoginRequiredMixin, CreateView):
-#     model =  SalesBill
-#     form_class = SalesBillForm
-#     template_name = 'mainapp/form.html'
-#     success_url = reverse_lazy('sale-list')
-#
-#     def form_valid(self, form):
-#         form.instance.created_by = self.request.user
-#         return super().form_valid(form)
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['page_title'] = "Add Sale"
-#         return context
-
-
 # === views.py snippet for sales bill creation ===
 class SalesBillCreateView(View):
     def get(self, request):
@@ -51,13 +35,19 @@ class SalesBillCreateView(View):
         if bill_form.is_valid() and formset.is_valid():
             bill = bill_form.save()
             formset.instance = bill
+            total_bill = 0
             for item_form in formset:
                 if item_form.cleaned_data.get("product"):
                     product = item_form.cleaned_data["product"]
                     rate = DailyRate.objects.filter(product=product, date=bill.date).first()
                     if rate:
-                        item_form.instance.rate = rate.rate
+                        item_form.instance.rate = rate.sales_rate
+                    total_bill += item_form.cleaned_data['weight_kg'] * item_form.cleaned_data['rate_per_kg']
             formset.save()
+
+            # Update buyer balance
+            bill.buyer.balance += total_bill
+            bill.buyer.save()
             return redirect('sales:salesbill-list')
         return render(request, 'sales/salesbill_form.html', {'form': bill_form, 'formset': formset})
 
@@ -80,6 +70,8 @@ class SalesBillUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         context = self.get_context_data()
         formset = context['formset']
+        previous_total = sum(item.total_price() for item in self.object.items.all())
+
         if formset.is_valid():
             self.object = form.save()
             formset.instance = self.object
@@ -90,6 +82,11 @@ class SalesBillUpdateView(LoginRequiredMixin, UpdateView):
                     if rate:
                         item_form.instance.rate = rate.sales_rate
             formset.save()
+            new_total = sum(item.total_price() for item in self.object.items.all())
+            diff = new_total - previous_total
+
+            self.object.buyer.balance += diff
+            self.object.buyer.save()
             return redirect(self.success_url)
         return self.form_invalid(form)
 

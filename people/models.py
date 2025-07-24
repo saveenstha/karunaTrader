@@ -35,6 +35,7 @@ class Farmer(TimeStampedModel):
     name = models.CharField(max_length=255)
     contact = models.BigIntegerField(blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __str__(self):
         return self.name
